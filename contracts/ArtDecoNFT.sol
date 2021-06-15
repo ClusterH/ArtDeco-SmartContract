@@ -223,8 +223,9 @@ contract ArtDecoNFT is ERC721URIStorage, Ownable {
         _;
     }
 
-    constructor() ERC721("ArtDeco NFTs", "ARTD") {
+    constructor(address _paymentToken) ERC721("ArtDeco NFTs", "ARTD") {
         feeAddress = _msgSender();
+        paymentToken = IERC20(_paymentToken);
     }
 
     function setFee(address _feeAddress, uint256 _feePercent) external onlyOwner {
