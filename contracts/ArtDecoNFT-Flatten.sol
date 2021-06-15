@@ -1379,6 +1379,13 @@ contract ArtDecoNFT is ERC721URIStorage, Ownable {
         delete price[_id];
         delete listedMap[_id];
 
+        // Remove all Bid List
+        for(uint256 i = 0; i < bidArrayOfToken[_id].length; i++)
+        {
+            bidStatusOfToken[_id][bidArrayOfToken[_id][i].buyer] = false;
+        }
+        delete bidArrayOfToken[_id];
+        
         emit Burned(_id);
     }
 
@@ -1403,6 +1410,13 @@ contract ArtDecoNFT is ERC721URIStorage, Ownable {
         }
 
         listedMap[_id] = false;
+
+        // Remove all Bid List
+        for(uint256 i = 0; i < bidArrayOfToken[_id].length; i++)
+        {
+            bidStatusOfToken[_id][bidArrayOfToken[_id][i].buyer] = false;
+        }
+        delete bidArrayOfToken[_id];
 
         emit Purchase(_previousOwner, _newOwner, price[_id], _id, tokenURI(_id));
     }
@@ -1436,7 +1450,6 @@ contract ArtDecoNFT is ERC721URIStorage, Ownable {
         _transfer(_owner, _buyer, _id);
 
         uint256 _price = getPriceOfBid(_id, _buyer);
-        // 2.5% commission cut
         uint256 _commissionValue = _price.div(10**2).mul(feePercent);
         uint256 _sellerValue = _price.sub(_commissionValue);
 
@@ -1450,7 +1463,6 @@ contract ArtDecoNFT is ERC721URIStorage, Ownable {
         {
             bidStatusOfToken[_id][bidArrayOfToken[_id][i].buyer] = false;
         }
-
         delete bidArrayOfToken[_id];
 
         emit Sell(_owner, _buyer, _price, _id, tokenURI(_id));
